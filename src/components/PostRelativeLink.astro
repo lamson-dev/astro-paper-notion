@@ -1,5 +1,5 @@
 ---
-import { getNavLink, getPostLink } from "../lib/blog-helpers.ts";
+import { getPostLink } from "../lib/blog-helpers.ts";
 import type { CollectionEntry } from "astro:content";
 
 export interface Props {
@@ -10,7 +10,7 @@ export interface Props {
 const { prevPost, nextPost } = Astro.props;
 ---
 
-<div class="post-relative-link">
+<div class="post-relative-link my-8">
   <div>
     {
       nextPost && (
@@ -34,9 +34,6 @@ const { prevPost, nextPost } = Astro.props;
 </div>
 
 <style>
-  div.post-relative-link {
-    margin-top: 1rem;
-  }
   div.post-relative-link > div {
     display: block;
     margin-top: 0.6rem;
@@ -70,7 +67,7 @@ const { prevPost, nextPost } = Astro.props;
     width: auto;
     padding: 0.2rem 0 0.4rem;
     text-align: left;
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 0.9rem;
+    font-weight: 500;
   }
 </style>

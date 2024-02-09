@@ -8,14 +8,18 @@ import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@utils/slugify";
 import ShareLinks from "@components/ShareLinks.astro";
 import { SITE } from "@config";
-import { notion2md } from "@lib/notion/client";
-import { marked } from "marked";
+import PostRelativeLink from "@components/PostRelativeLink.astro";
+import { queryNotionPostBlocks } from "@utils/blogEntryFromNotionPost";
+import PostBody from "@components/PostBody.astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 
 export interface Props {
   post: CollectionEntry<"blog">;
+  nextPost: CollectionEntry<"blog">;
+  prevPost: CollectionEntry<"blog">;
 }
 
-const { post } = Astro.props;
+const { post, nextPost, prevPost } = Astro.props;
 
 const {
   title,
@@ -28,15 +32,11 @@ const {
   tags,
 } = post.data;
 
-let Content = null;
-let MarkdownContent = null;
+let Content: AstroComponentFactory | null = null;
 if (typeof post.render === "function") {
   Content = (await post.render()).Content;
-} else if (post.notionPageId) {
-  MarkdownContent = marked.parse(
-    await notion2md({ pageId: post.notionPageId })
-  );
 }
+const notionBlocks = await queryNotionPostBlocks({ pageId: post.notionPageId });
 
 const ogImageUrl = typeof ogImage === "string" ? ogImage : ogImage?.src;
 const ogUrl = new URL(
@@ -84,22 +84,14 @@ const layoutProps = {
       className="my-2"
     />
     <article id="article" role="article" class="prose mx-auto mt-8 max-w-3xl">
-      {Content !== null && <Content />}
+      {Content !== null ? <Content /> : <PostBody blocks={notionBlocks} />}
     </article>
-    {
-      MarkdownContent !== null && (
-        <article
-          set:html={MarkdownContent}
-          id="article"
-          role="article"
-          class="prose mx-auto mt-8 max-w-3xl"
-        />
-      )
-    }
 
     <ul class="my-8">
       {tags.map(tag => <Tag tag={slugifyStr(tag)} />)}
     </ul>
+
+    <PostRelativeLink prevPost={prevPost} nextPost={nextPost} />
 
     <div
       class="flex flex-col-reverse items-center justify-between gap-6 sm:flex-row-reverse sm:items-end sm:gap-4"

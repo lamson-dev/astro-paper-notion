@@ -41,6 +41,9 @@ const notionPosts = await getNotionCollection();
 const allPosts = [...posts, ...notionPosts];
 
 const sortedPosts = getSortedPosts(allPosts);
+const currentPostIndex = sortedPosts.findIndex(post => post.slug === slug);
+const prevPost = sortedPosts[currentPostIndex + 1];
+const nextPost = sortedPosts[currentPostIndex - 1];
 
 const pagination = getPagination({
   posts: sortedPosts,
@@ -48,4 +51,10 @@ const pagination = getPagination({
 });
 ---
 
-{post ? <PostDetails post={post} /> : <Posts {...pagination} />}
+{
+  post ? (
+    <PostDetails post={post} prevPost={prevPost} nextPost={nextPost} />
+  ) : (
+    <Posts {...pagination} />
+  )
+}

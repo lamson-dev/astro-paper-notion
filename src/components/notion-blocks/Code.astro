@@ -1,7 +1,8 @@
 ---
-import { Prism } from "@astrojs/prism";
 import type { Block, RichText } from "@lib/interfaces";
 import Caption from "./Caption.astro";
+import { codeToHtml } from "shiki";
+import { SITE } from "@config";
 
 export interface Props {
   block: Block;
@@ -13,6 +14,10 @@ const code = block.Code.RichTexts.map(
   (richText: RichText) => richText.Text.Content
 ).join("");
 const language = block.Code.Language.toLowerCase();
+const codeWithSyntaxHighlightHtml = await codeToHtml(code, {
+  lang: language,
+  theme: SITE.shikiTheme,
+});
 ---
 
 <div class="code">
@@ -22,7 +27,7 @@ const language = block.Code.Language.toLowerCase();
       language === 'mermaid' ? (
         <pre class="mermaid">{code}</pre>
       ) : (
-        <Prism code={code} lang={language} />
+          <div set:html={codeWithSyntaxHighlightHtml} />
       )
     }
   </div>
@@ -31,63 +36,5 @@ const language = block.Code.Language.toLowerCase();
 
 <script>
   import mermaid from "mermaid";
-  mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+  mermaid.initialize({ startOnLoad: true });
 </script>
-
-<style>
-  .code {
-    display: block;
-    width: 100%;
-    margin-bottom: 0.6rem;
-  }
-  .code > div,
-  .code pre {
-    background: rgb(247, 246, 243);
-    border-radius: var(--radius);
-  }
-  .code > div div {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .code button.copy {
-    display: block;
-    width: 4rem;
-    border: 0;
-    border-radius: var(--radius);
-    background-color: rgba(227, 226, 224, 0.5);
-    color: var(--fg);
-    line-height: 1.2rem;
-    cursor: pointer;
-  }
-  .code pre {
-    display: block;
-    overflow: auto;
-    padding: 0.8rem 2rem 2rem;
-    font-size: 0.9rem;
-    line-height: 1.2rem;
-    white-space: pre;
-    width: 100px;
-    min-width: 100%;
-    overflow-x: auto;
-
-    /* TODO check this nested css, do I care about this? */
-    /* &::-webkit-scrollbar {
-      height: 10px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: rgb(211, 209, 203);
-    }
-    &::-webkit-scrollbar-track {
-      background: rgb(237, 236, 233);
-    } */
-  }
-  .code pre.mermaid {
-    padding: 2rem;
-  }
-  .code pre code {
-    color: var(--fg);
-    padding: 0;
-    background: rgb(247, 246, 243) !important;
-    border-radius: 0;
-  }
-</style>

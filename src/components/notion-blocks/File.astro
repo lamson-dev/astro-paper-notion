@@ -1,10 +1,10 @@
 ---
-import * as interfaces from "../../lib/notion/interfaces";
+import type { Block } from "../../lib/interfaces";
 import { filePath } from "../../lib/blog-helpers";
 import Caption from "./Caption.astro";
 
 export interface Props {
-  block: interfaces.Block;
+  block: Block;
 }
 
 const { block } = Astro.props;
@@ -41,24 +41,22 @@ const filename = decodeURIComponent(url.pathname.split("/").slice(-1)[0]);
 </div>
 
 <style>
-  .file {
+  div.file {
   }
 
-  .file a {
-    display: block;
+  div.file a {
+    @apply block no-underline;
     padding: 0.5rem 0.2rem 0.4rem;
     border-radius: var(--radius);
     color: var(--fg);
     font-weight: 500;
     line-height: 1.4rem;
   }
-  .file a:hover {
+  div.file a:hover {
     background-color: #eee;
   }
 
-  .file a img {
-    width: 1.3rem;
-    height: 1.3rem;
-    vertical-align: sub;
+  div.file a img {
+    @apply inline h-6;
   }
 </style>

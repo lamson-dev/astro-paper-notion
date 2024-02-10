@@ -1,12 +1,12 @@
 ---
-import * as interfaces from "../../lib/interfaces.ts";
+import type { Block, RichText as RichTextType } from "../../lib/interfaces.ts";
 import { buildHeadingId } from "../../lib/blog-helpers.ts";
 import RichText from "./RichText.astro";
 import NotionBlocks from "../NotionBlocks.astro";
 
 export interface Props {
-  block: interfaces.Block;
-  headings: interfaces.Block[];
+  block: Block;
+  headings: Block[];
 }
 
 const { block, headings } = Astro.props;
@@ -19,11 +19,11 @@ const id = buildHeadingId(block.Heading1);
     <details class="toggle">
       <summary>
         <a href={`#${id}`} id={id}>
-          <h3>
-            {block.Heading1.RichTexts.map((richText: interfaces.RichText) => (
+          <h2>
+            {block.Heading1.RichTexts.map((richText: RichTextType) => (
               <RichText richText={richText} />
             ))}
-          </h3>
+          </h2>
         </a>
       </summary>
       <div>
@@ -34,49 +34,30 @@ const id = buildHeadingId(block.Heading1);
     </details>
   ) : (
     <a href={`#${id}`} id={id}>
-      <h3>
-        {block.Heading1.RichTexts.map((richText: interfaces.RichText) => (
+      <h2>
+        {block.Heading1.RichTexts.map((richText: RichTextType) => (
           <RichText richText={richText} />
         ))}
-      </h3>
+      </h2>
     </a>
   )
 }
 
 <style>
-  h3 {
-    margin: 1.1em 0 0.3em;
-    color: var(--fg);
-    font-size: 1.8rem;
-  }
-  @media (max-width: 640px) {
-    h3 {
-      font-size: 1.3rem;
-    }
+  details.toggle {
+    @apply block mt-5 sm:mt-8;
   }
 
-  .toggle {
-    margin: 2rem 0 0;
-  }
-  @media (max-width: 640px) {
-    .toggle {
-      margin: 1.4rem 0 0;
-    }
+  details.toggle > summary {
+    @apply cursor-pointer;
   }
 
-  .toggle > summary {
-    cursor: pointer;
+  details.toggle > summary > a,
+  details.toggle > summary > a > h2 {
+    @apply inline;
   }
 
-  .toggle > summary > a {
-    display: inline;
-  }
-
-  .toggle > summary > a > h3 {
-    display: inline;
-  }
-
-  .toggle > div {
-    margin-left: 1em;
+  details.toggle > div {
+    @applh ml-8;
   }
 </style>

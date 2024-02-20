@@ -2,6 +2,12 @@
 dist/
 .output/
 
+tmp/
+!tmp/.gitkeep
+
+public/notion/*
+!public/notion/.gitkeep
+
 # dependencies
 node_modules/
 

@@ -5,6 +5,7 @@ import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import sitemap from "@astrojs/sitemap";
 import { SITE } from "./src/config";
+import PublicNotionCopier from "./src/integrations/public-notion-copier";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
     }),
     react(),
     sitemap(),
+    PublicNotionCopier(),
   ],
   markdown: {
     remarkPlugins: [
@@ -27,7 +29,7 @@ export default defineConfig({
       ],
     ],
     shikiConfig: {
-      theme: "one-dark-pro",
+      theme: SITE.shikiTheme,
       wrap: true,
     },
   },

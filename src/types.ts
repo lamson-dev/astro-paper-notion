@@ -1,4 +1,5 @@
 import type socialIcons from "@assets/socialIcons";
+import type { ThemePresets } from "@astrojs/markdown-remark";
 
 export type Site = {
   website: string;
@@ -9,6 +10,7 @@ export type Site = {
   lightAndDarkMode: boolean;
   postPerPage: number;
   scheduledPostMargin: number;
+  shikiTheme: ThemePresets;
 };
 
 export type SocialObjects = {
